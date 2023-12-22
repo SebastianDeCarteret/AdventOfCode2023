@@ -1,38 +1,57 @@
-﻿namespace Day1
+﻿using System.Text.RegularExpressions;
+
+namespace Day1
 {
     public class Trebuchet
     {
         public static void Main()
         {
+            var conversionTable = new Dictionary<string, int>()
+            {
+                {  "one", 1},
+                {  "two", 2},
+                {  "three", 3},
+                {  "four", 4},
+                {  "five", 5},
+                {  "six", 6},
+                {  "seven", 7},
+                {  "eight", 8},
+                {  "nine", 9},
+                {  "1", 1},
+                {  "2", 2},
+                {  "3", 3},
+                {  "4", 4},
+                {  "5", 5},
+                {  "6", 6},
+                {  "7", 7},
+                {  "8", 8},
+                {  "9", 9}
+            };
             try
             {
-                // Open the text file using a stream reader.
                 using (var sr = new StreamReader("C:\\Users\\sdecarteret\\Desktop\\code\\C#\\AdventOfCode2023\\Day1\\1data.txt"))
                 {
-                    // Read the stream as a string, and write the string to the console.
-                    //Console.WriteLine(sr.ReadToEnd());
                     string[] data = sr.ReadToEnd().Split("\r");
-
-                    string[] numbersAsStrings =
-                        [
-                            "one",
-                            "two",
-                            "three",
-                            "four",
-                            "five",
-                            "six",
-                            "seven",
-                            "eight",
-                            "nine",
-                        ];
-
-                    foreach (string number in numbersAsStrings)
+                    List<int> matchesList = new List<int>();
+                    foreach (string line in data)
                     {
-                        Console.WriteLine($"First: {data[0].IndexOf(number)}");
-                        Console.WriteLine($"Last: {data[0].LastIndexOf(number)}");
-                    }
+                        var matches = Regex.Matches(line, "one|two|three|four|five|six|seven|eight|nine|\\d", RegexOptions.IgnoreCase);
+                        if (matches.Count == 1)
+                        {
+                            matchesList.Add(conversionTable[matches.First().Value] * 10);
+                            matchesList.Add(conversionTable[matches.First().Value]);
 
-                    Console.WriteLine(data[0]);
+                        }
+                        else if (matches.Count > 1)
+                        {
+                            matchesList.Add(conversionTable[matches.First().Value] * 10);
+                            matchesList.Add(conversionTable[matches.Last().Value]);
+
+                        }
+
+                    }
+                    int total = matchesList.Sum();
+                    Console.WriteLine($"Total:\n{total}");
                 }
             }
             catch (IOException e)
