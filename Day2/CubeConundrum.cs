@@ -19,7 +19,7 @@ namespace Day2
 
         public int GetIdFromString(string s)
         {
-            int match = int.Parse(Regex.Match(Regex.Match(s, "Game \\d+").Value, "\\d+").Value);
+            int match = int.Parse(Regex.Match(Regex.Match(s, "Game \\d+").Value, "\\d+").Value);// regex to match "Game" followed by any number of digits(the game number)
             return match;
         }
         public int? GetHighestValueForColour(string colour, string line, int maxValue)
@@ -51,7 +51,7 @@ namespace Day2
             if (line.Contains(colour))
             {
                 var matches = Regex.Matches(line, $"\\d+ {colour}").ToList();
-                List<int> temp = new List<int>();
+                var temp = new List<int>();
                 foreach (var match in matches)
                 {
                     temp.Add(int.Parse(Regex.Match(match.Value, "\\d+").Value));
@@ -62,17 +62,17 @@ namespace Day2
             }
             return null;
         }
-        public Game(string s1)
+        public Game(string line)
         {
-            Id = GetIdFromString(s1);
+            Id = GetIdFromString(line);
 
-            BlueHighestValue = GetHighestValueForColour("blue", s1, 14);
-            GreenHighestValue = GetHighestValueForColour("green", s1, 13);
-            RedHighestValue = GetHighestValueForColour("red", s1, 12);
+            BlueHighestValue = GetHighestValueForColour("blue", line, 14);
+            GreenHighestValue = GetHighestValueForColour("green", line, 13);
+            RedHighestValue = GetHighestValueForColour("red", line, 12);
 
-            BlueHighestPlayedValue = GetHighestPlayedValueForColour("blue", s1);
-            GreenHighestPlayedValue = GetHighestPlayedValueForColour("green", s1);
-            RedHighestPlayedValue = GetHighestPlayedValueForColour("red", s1);
+            BlueHighestPlayedValue = GetHighestPlayedValueForColour("blue", line);
+            GreenHighestPlayedValue = GetHighestPlayedValueForColour("green", line);
+            RedHighestPlayedValue = GetHighestPlayedValueForColour("red", line);
         }
 
     }
