@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-
+// 532136 - too low
 namespace Day3
 {
     public class GearRatios
@@ -29,7 +29,7 @@ namespace Day3
 
             }
             int indexOfCurrentNumber = 0;
-            for (int i = 1; i < data.Length; i++)// for each line
+            for (int i = 11; i < data.Length; i++)// for each line
             {
                 List<string> individualLineNumbers = foundNumbers[i];
 
@@ -42,7 +42,6 @@ namespace Day3
 
                     if (currentLine.Contains(currentNumber)) // check if the number is in the current line
                     {
-                        //int indexOfCurrentNumber = 0;
                         if (specialChars.Contains(currentLine[indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0].ToString()))// check adjacent, start, same line
                         {
                             sum += int.Parse(currentNumber);
@@ -54,38 +53,30 @@ namespace Day3
                                 sum += int.Parse(currentNumber);
                             }
                         }
-                        if (previousLine != null)
+                        if (previousLine != null && indexOfCurrentNumber + (currentNumber.Length + 1) < currentLine.Length)
                         {
                             char[] valuesToTest = previousLine.Substring(indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0, currentNumber.Length + 2).ToCharArray();
                             foreach (var value in valuesToTest)
                             {
                                 if (specialChars.Contains(value.ToString()))
                                 {
-                                    Console.WriteLine($"i = {i} | substring of [{string.Join(", ", valuesToTest)}] contains special charatcer in previous line");
+                                    Console.WriteLine($"i = {i} num = {currentNumber} | substring of [{string.Join(", ", valuesToTest)}] contains special charatcer in previous line");
                                     sum += int.Parse(currentNumber);
                                 }
                             }
                         }
-                        //else
-                        //{
-                        //    Console.WriteLine($"{currentNumber} is not in the currnt line with index: {i}");
-                        //}
-                        if (nextLine != null)
+                        if (nextLine != null && indexOfCurrentNumber + (currentNumber.Length + 1) < currentLine.Length)
                         {
                             char[] valuesToTest = nextLine.Substring((indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0), currentNumber.Length + 2).ToCharArray();
                             foreach (var value in valuesToTest)
                             {
                                 if (specialChars.Contains(value.ToString()))
                                 {
-                                    Console.WriteLine($"i = {i} | substring of [{string.Join(", ", valuesToTest)}] contains special charatcer in next line");
+                                    Console.WriteLine($"i = {i} num = {currentNumber} | substring of [{string.Join(", ", valuesToTest)}] contains special charatcer in next line");
                                     sum += int.Parse(currentNumber);
                                 }
                             }
                         }
-                        //else
-                        //{
-                        //    Console.WriteLine($"{currentNumber} is not in the currnt line with index: {i}");
-                        //}
                     }
                     else
                     {
@@ -94,44 +85,6 @@ namespace Day3
                 }
 
             }
-
-
-            //foreach (var lineNumbers in foundNumbers)
-            //{
-            //    foreach (var number in lineNumbers)
-            //    {
-            //        int indexOfNumber = data[lineIndex].IndexOf(number);
-
-            //        string currentLine = data[lineIndex];
-            //        //string previousLine = data[lineIndex];
-            //        //string nextLine = data[lineIndex];
-
-            //        if (indexOfNumber != -1)
-            //        {
-            //            if (specialChars.Contains(currentLine[indexOfNumber].ToString()))
-            //            {
-            //                sum = sum + int.Parse(number);
-            //                //sum += int.Parse(number);
-            //            }
-            //            if (specialChars.Contains(currentLine[indexOfNumber + (number.Length + 1)].ToString()))
-            //            {
-            //                sum += int.Parse(number);
-            //            }
-            //            lineIndex++;
-            //            //if (specialChars.Contains(nextLine[indexOfNumber - 1].ToString()))
-            //            //{
-            //            //    sum += int.Parse(number);
-            //            //}
-            //            //if (specialChars.Contains(nextLine[indexOfNumber + (number.Length + 1)].ToString()))
-            //            //{
-            //            //    sum += int.Parse(number);
-            //            //}
-            //        }
-
-            //        Console.WriteLine(number);
-            //    }
-            //}
-
             Console.WriteLine($"sum: {sum}");
 
         }
