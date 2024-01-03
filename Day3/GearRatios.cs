@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 // 532136 - too low
+// 535235 - 
 namespace Day3
 {
     public class GearRatios
@@ -8,6 +9,8 @@ namespace Day3
         public static void Main()
         {
             string[] specialChars = ["*", "@", "#", "&", "=", "/", "-", "+", "%", "$"];
+
+            string[] regexEscapeChars = ["*", ".", "+", "$", "/"];
 
             string[] data = GetData();
 
@@ -22,7 +25,7 @@ namespace Day3
                 //Console.WriteLine(line.Length);
                 List<string> numbersTemp = new List<string>();
                 // this regex needs to be redone to allow this to be selected properly => .722.286.
-                foreach (var number in Regex.Matches(line, "([^\\d\\s\\r]\\d+[^\\d\\s\\r])|(\\d+[^\\d\\s\\r])|([^\\d\\s\\r]\\d+)").ToList())
+                foreach (var number in Regex.Matches(line, "([^\\d\\s\\r]?\\d+)").ToList())
                 {
                     numbersTemp.Add(number.Value);
                 }
@@ -40,7 +43,11 @@ namespace Day3
                     string currentLine = data[i];
                     string? previousLine = i - 1 >= 0 ? data[i - 1] : null;
                     string? nextLine = i + 1 < data.Length ? data[i + 1] : null;
-                    indexOfCurrentNumber = currentLine.IndexOf(currentNumberStripped);
+                    int offset = currentNumberStripped.Length < currentNumber.Length ? 1 : 0;
+                    //indexOfCurrentNumber = currentLine.IndexOf(currentNumber) + offset;
+                    string regexEscape = regexEscapeChars.Contains(currentNumber[0].ToString()) ? "\\" : "";
+                    string regexEscapeEnd = regexEscapeChars.Contains(currentNumber.Last().ToString()) ? "\\" : "";
+                    indexOfCurrentNumber = Regex.Match(currentLine, regexEscape + currentNumber + regexEscapeEnd + "($|\\D)").Index + offset;
 
                     if (currentLine.Contains(currentNumberStripped)) // check if the number is in the current line
                     {
@@ -59,11 +66,13 @@ namespace Day3
                         //    int currentNumberStripped = int.Parse(Regex.Match(currentNumber, "\\d+").Value);
                         //    sum += currentNumberStripped;
                         //}
+                        int boxStart = indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0;
+                        int boxLength = boxStart + currentNumber.Length + 1 > currentLine.Length - 1 ? currentNumber.Length : currentNumber.Length + 1;
                         if (currentLine != null && indexOfCurrentNumber + currentNumberStripped.Length <= currentLine.Length)
                         {
                             // needs fixing when at end of line
 
-                            char[] valuesToTest = currentLine.Substring((indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0), currentNumberStripped.Length + 2).ToCharArray();
+                            char[] valuesToTest = currentLine.Substring(boxStart, boxLength).ToCharArray();
                             foreach (var value in valuesToTest)
                             {
                                 if (specialChars.Contains(value.ToString()))
@@ -74,9 +83,9 @@ namespace Day3
                                 }
                             }
                         }
-                        if (previousLine != null && indexOfCurrentNumber + currentNumberStripped.Length <= currentLine.Length)
+                        if (previousLine != null && indexOfCurrentNumber + currentNumberStripped.Length <= currentLine?.Length)
                         {
-                            char[] valuesToTest = previousLine.Substring(indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0, currentNumberStripped.Length + 1).ToCharArray();
+                            char[] valuesToTest = previousLine.Substring(boxStart, boxLength).ToCharArray();
                             foreach (var value in valuesToTest)
                             {
                                 if (specialChars.Contains(value.ToString()))
@@ -87,9 +96,9 @@ namespace Day3
                                 }
                             }
                         }
-                        if (nextLine != null && indexOfCurrentNumber + currentNumberStripped.Length <= currentLine.Length)
+                        if (nextLine != null && indexOfCurrentNumber + currentNumberStripped.Length <= currentLine?.Length)
                         {
-                            char[] valuesToTest = nextLine.Substring((indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0), currentNumberStripped.Length + 1).ToCharArray();
+                            char[] valuesToTest = nextLine.Substring(boxStart, boxLength).ToCharArray();
                             foreach (var value in valuesToTest)
                             {
                                 if (specialChars.Contains(value.ToString()))
@@ -119,8 +128,8 @@ namespace Day3
             try
             {
                 Directory.GetCurrentDirectory();
-                //using (var sr = new StreamReader("3data.txt"))
-                using (var sr = new StreamReader("test.txt"))
+                using (var sr = new StreamReader("3data.txt"))
+                //using (var sr = new StreamReader("test.txt"))
                 {
                     string[] data = sr.ReadToEnd().Split("\r\n");
 
