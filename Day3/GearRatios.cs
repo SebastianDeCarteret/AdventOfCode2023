@@ -29,7 +29,7 @@ namespace Day3
 
             }
             int indexOfCurrentNumber = 0;
-            for (int i = 11; i < data.Length; i++)// for each line
+            for (int i = 0; i < data.Length; i++)// for each line
             {
                 List<string> individualLineNumbers = foundNumbers[i];
 
@@ -44,12 +44,14 @@ namespace Day3
                     {
                         if (specialChars.Contains(currentLine[indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0].ToString()))// check adjacent, start, same line
                         {
+                            Console.WriteLine($"i = {i} num = {currentNumber} | substring contains special charatcer in current line at start");
                             sum += int.Parse(currentNumber);
                         }
                         if (indexOfCurrentNumber + (currentNumber.Length + 1) < currentLine.Length)// check adjacent, end, same line
                         {
                             if (specialChars.Contains(currentLine[(indexOfCurrentNumber - 1) + (currentNumber.Length + 1)].ToString()))
                             {
+                                Console.WriteLine($"i = {i} num = {currentNumber} | substring contains special charatcer in current line at end");
                                 sum += int.Parse(currentNumber);
                             }
                         }
@@ -95,7 +97,9 @@ namespace Day3
 
             try
             {
-                using (var sr = new StreamReader("C:\\Users\\sdecarteret\\Desktop\\code\\C#\\AdventOfCode2023\\Day3\\3data.txt"))
+                Directory.GetCurrentDirectory();
+                //using (var sr = new StreamReader("3data.txt"))
+                using (var sr = new StreamReader("test.txt"))
                 {
                     string[] data = sr.ReadToEnd().Split("\r\n");
 
