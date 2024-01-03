@@ -21,7 +21,8 @@ namespace Day3
             {
                 //Console.WriteLine(line.Length);
                 List<string> numbersTemp = new List<string>();
-                foreach (var number in Regex.Matches(line, "\\d+").ToList())
+                // this regex needs to be redone to allow this to be selected properly => .722.286.
+                foreach (var number in Regex.Matches(line, "([^\\d\\s\\r]\\d+[^\\d\\s\\r])|(\\d+[^\\d\\s\\r])|([^\\d\\s\\r]\\d+)").ToList())
                 {
                     numbersTemp.Add(number.Value);
                 }
@@ -42,47 +43,64 @@ namespace Day3
 
                     if (currentLine.Contains(currentNumber)) // check if the number is in the current line
                     {
-                        if (specialChars.Contains(currentLine[indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0].ToString()))// check adjacent, start, same line
+                        string currentNumberStripped = Regex.Match(currentNumber, "\\d+").Value;
+                        //if (specialChars.Contains(currentNumber[0].ToString()))// check adjacent, start, same line
+                        //{
+                        //    Console.WriteLine($"i = {i} num = {currentNumber} | substring contains special charatcer in current line at start");
+                        //    int currentNumberStripped = int.Parse(Regex.Match(currentNumber, "\\d+").Value);
+                        //    sum += currentNumberStripped;
+                        //}
+                        ////if (indexOfCurrentNumber + (currentNumber.Length + 1) < currentLine.Length)// check adjacent, end, same line
+                        ////{
+                        //if (specialChars.Contains(currentNumber[currentNumber.Length - 1].ToString()))
+                        //{
+                        //    Console.WriteLine($"i = {i} num = {currentNumber} | substring contains special charatcer in current line at end");
+                        //    int currentNumberStripped = int.Parse(Regex.Match(currentNumber, "\\d+").Value);
+                        //    sum += currentNumberStripped;
+                        //}
+                        if (currentLine != null && indexOfCurrentNumber + currentNumberStripped.Length <= currentLine.Length)
                         {
-                            Console.WriteLine($"i = {i} num = {currentNumber} | substring contains special charatcer in current line at start");
-                            sum += int.Parse(currentNumber);
-                        }
-                        if (indexOfCurrentNumber + (currentNumber.Length + 1) < currentLine.Length)// check adjacent, end, same line
-                        {
-                            if (specialChars.Contains(currentLine[(indexOfCurrentNumber - 1) + (currentNumber.Length + 1)].ToString()))
+                            char[] valuesToTest = currentLine.Substring(indexOfCurrentNumber >= 0 ? indexOfCurrentNumber : 0, currentNumber.Length).ToCharArray();
+                            foreach (var value in valuesToTest)
                             {
-                                Console.WriteLine($"i = {i} num = {currentNumber} | substring contains special charatcer in current line at end");
-                                sum += int.Parse(currentNumber);
+                                if (specialChars.Contains(value.ToString()))
+                                {
+                                    Console.WriteLine($"i = {i} num = {currentNumber} | substring of [{string.Join(", ", valuesToTest)}] contains special charatcer in current line");
+                                    //int currentNumberStripped = int.Parse(Regex.Match(currentNumber, "\\d+").Value);
+                                    sum += int.Parse(currentNumberStripped);
+                                }
                             }
                         }
-                        if (previousLine != null && indexOfCurrentNumber + (currentNumber.Length + 1) < currentLine.Length)
+                        if (previousLine != null && indexOfCurrentNumber + currentNumberStripped.Length <= currentLine.Length)
                         {
-                            char[] valuesToTest = previousLine.Substring(indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0, currentNumber.Length + 2).ToCharArray();
+                            char[] valuesToTest = previousLine.Substring(indexOfCurrentNumber >= 0 ? indexOfCurrentNumber : 0, currentNumber.Length).ToCharArray();
                             foreach (var value in valuesToTest)
                             {
                                 if (specialChars.Contains(value.ToString()))
                                 {
                                     Console.WriteLine($"i = {i} num = {currentNumber} | substring of [{string.Join(", ", valuesToTest)}] contains special charatcer in previous line");
-                                    sum += int.Parse(currentNumber);
+                                    //int currentNumberStripped = int.Parse(Regex.Match(currentNumber, "\\d+").Value);
+                                    sum += int.Parse(currentNumberStripped);
                                 }
                             }
                         }
-                        if (nextLine != null && indexOfCurrentNumber + (currentNumber.Length + 1) < currentLine.Length)
+                        if (nextLine != null && indexOfCurrentNumber + currentNumberStripped.Length <= currentLine.Length)
                         {
-                            char[] valuesToTest = nextLine.Substring((indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0), currentNumber.Length + 2).ToCharArray();
+                            char[] valuesToTest = nextLine.Substring((indexOfCurrentNumber >= 0 ? indexOfCurrentNumber : 0), currentNumber.Length).ToCharArray();
                             foreach (var value in valuesToTest)
                             {
                                 if (specialChars.Contains(value.ToString()))
                                 {
                                     Console.WriteLine($"i = {i} num = {currentNumber} | substring of [{string.Join(", ", valuesToTest)}] contains special charatcer in next line");
-                                    sum += int.Parse(currentNumber);
+                                    //int currentNumberStripped = int.Parse(Regex.Match(currentNumber, "\\d+").Value);
+                                    sum += int.Parse(currentNumberStripped);
                                 }
                             }
                         }
                     }
                     else
                     {
-                        Console.WriteLine($"not in the current line with index: {i}");
+                        Console.WriteLine($"i = {i} num = {currentNumber} | not in the current line with index: {i}");
                     }
                 }
 
