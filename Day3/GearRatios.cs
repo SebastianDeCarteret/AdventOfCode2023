@@ -36,14 +36,15 @@ namespace Day3
 
                 foreach (var currentNumber in individualLineNumbers)
                 {
+                    string currentNumberStripped = Regex.Match(currentNumber, "\\d+").Value;
                     string currentLine = data[i];
                     string? previousLine = i - 1 >= 0 ? data[i - 1] : null;
                     string? nextLine = i + 1 < data.Length ? data[i + 1] : null;
-                    indexOfCurrentNumber = currentLine.IndexOf(currentNumber);
+                    indexOfCurrentNumber = currentLine.IndexOf(currentNumberStripped);
 
-                    if (currentLine.Contains(currentNumber)) // check if the number is in the current line
+                    if (currentLine.Contains(currentNumberStripped)) // check if the number is in the current line
                     {
-                        string currentNumberStripped = Regex.Match(currentNumber, "\\d+").Value;
+                        //string currentNumberStripped = Regex.Match(currentNumber, "\\d+").Value;
                         //if (specialChars.Contains(currentNumber[0].ToString()))// check adjacent, start, same line
                         //{
                         //    Console.WriteLine($"i = {i} num = {currentNumber} | substring contains special charatcer in current line at start");
@@ -60,7 +61,9 @@ namespace Day3
                         //}
                         if (currentLine != null && indexOfCurrentNumber + currentNumberStripped.Length <= currentLine.Length)
                         {
-                            char[] valuesToTest = currentLine.Substring(indexOfCurrentNumber >= 0 ? indexOfCurrentNumber : 0, currentNumber.Length).ToCharArray();
+                            // needs fixing when at end of line
+
+                            char[] valuesToTest = currentLine.Substring((indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0), currentNumberStripped.Length + 2).ToCharArray();
                             foreach (var value in valuesToTest)
                             {
                                 if (specialChars.Contains(value.ToString()))
@@ -73,7 +76,7 @@ namespace Day3
                         }
                         if (previousLine != null && indexOfCurrentNumber + currentNumberStripped.Length <= currentLine.Length)
                         {
-                            char[] valuesToTest = previousLine.Substring(indexOfCurrentNumber >= 0 ? indexOfCurrentNumber : 0, currentNumber.Length).ToCharArray();
+                            char[] valuesToTest = previousLine.Substring(indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0, currentNumberStripped.Length + 1).ToCharArray();
                             foreach (var value in valuesToTest)
                             {
                                 if (specialChars.Contains(value.ToString()))
@@ -86,7 +89,7 @@ namespace Day3
                         }
                         if (nextLine != null && indexOfCurrentNumber + currentNumberStripped.Length <= currentLine.Length)
                         {
-                            char[] valuesToTest = nextLine.Substring((indexOfCurrentNumber >= 0 ? indexOfCurrentNumber : 0), currentNumber.Length).ToCharArray();
+                            char[] valuesToTest = nextLine.Substring((indexOfCurrentNumber - 1 >= 0 ? indexOfCurrentNumber - 1 : 0), currentNumberStripped.Length + 1).ToCharArray();
                             foreach (var value in valuesToTest)
                             {
                                 if (specialChars.Contains(value.ToString()))
