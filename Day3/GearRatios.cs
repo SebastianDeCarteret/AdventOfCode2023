@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 // 532136 - too low
-// 535235 - 
+// 535235 - correct
 namespace Day3
 {
     public class GearRatios
