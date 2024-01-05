@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-// 535235 - correct
+// 12146719 - too low
 namespace Day3Part2
 {
     public class GearRatiosPart2
@@ -24,8 +24,8 @@ namespace Day3Part2
             try
             {
                 Directory.GetCurrentDirectory();
-                //using (var sr = new StreamReader("3dataP2.txt"))
-                using (var sr = new StreamReader("testP2.txt"))
+                using (var sr = new StreamReader("3dataP2.txt"))
+                //using (var sr = new StreamReader("testP2.txt"))
                 {
                     string[] data = sr.ReadToEnd().Split("\r\n");
 
@@ -166,8 +166,23 @@ namespace Day3Part2
                 }
 
             }
+            var a = matchedNumbers.GroupBy(number => new { number.AsteriskLineIndex, number.AsteriskIndex }).ToList();
+            a.ForEach(x =>
+            {
+                var y = x.ToList();
+                if (y.Count > 1)
+                {
+                    sum += y[0].Value * y[1].Value;
+                    Console.WriteLine($"count = {y.Count} | Line: {y[0].AsteriskLineIndex} Column: {y[0].AsteriskIndex}");
+                }
+            });
 
-            var matches = matchedNumbers.FindAll(number => number.AsteriskIndex == number.AsteriskIndex);
+            //for (int i = 0; i < data.Length; i++)
+            //{
+            //    matchedNumbers.FindAll(number => new);
+            //    if(matchedNumbers)
+            //}
+            //var matches = matchedNumbers.FindAll(number => number.AsteriskIndex == number.AsteriskIndex);
 
             return sum;
         }
