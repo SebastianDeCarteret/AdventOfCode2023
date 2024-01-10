@@ -1,5 +1,4 @@
-﻿// 30251 - too high
-
+﻿// TODO - refactor and tidy up
 namespace Day4Part1
 {
     public class Scratchcards
@@ -19,7 +18,7 @@ namespace Day4Part1
 
             foreach (var line in data)
             {
-                string winningNumbers = line.Substring(line.IndexOf(":") + 2, line.IndexOf("|") - 9);
+                string winningNumbers = line.Substring(line.IndexOf(":") + 1, line.IndexOf("|") - 9);
                 string myNumbers = line.Substring(line.IndexOf("|") + 2);
 
                 ScratchCard scratchCard = ExtractDataToList(winningNumbers, myNumbers);
@@ -27,7 +26,6 @@ namespace Day4Part1
                 scratchCards.Add(scratchCard);
 
             }
-            //var a = scratchCards.GroupBy(scratchCard => scratchCard.MyNumbers.ForEach(myNumber => scratchCard.WinningNumbers.Contains(myNumber)));
             foreach (var scratchCard in scratchCards)
             {
                 List<string> wonNumbers = [];
@@ -43,14 +41,19 @@ namespace Day4Part1
 
                 if (wonNumbers.Count > 0)
                 {
-                    for (int i = 0; i < wonNumbers.Count; i++)
+                    for (int i = 1; i <= wonNumbers.Count; i++)
                     {
-                        // produces incorrect value
-                        miniSum++;
-                        miniSum = miniSum * 2;
+                        if (i == 1)
+                        {
+                            miniSum++;
+                        }
+                        else
+                        {
+                            miniSum *= 2;
+                        }
                     }
                 }
-                Console.WriteLine($"miniSum = {miniSum} | sum = {sum}");
+                Console.WriteLine($"miniSum = {miniSum} | sum = {sum} | winningNumbers = [{string.Join(", ", scratchCard.WinningNumbers)}] | myNumbers = [{string.Join(", ", scratchCard.MyNumbers)}]");
                 sum += miniSum;
             }
 
